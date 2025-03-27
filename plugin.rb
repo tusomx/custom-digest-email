@@ -4,5 +4,17 @@
 # authors: Kudzai Tuso
 
 after_initialize do
-  EmailController.prepend_view_path File.expand_path("../views", __FILE__)
+
+  custom_views_path = File.expand_path("../app/views", __FILE__)
+
+# For admin preview
+::Admin::EmailController.prepend_view_path(custom_views_path)
+  
+# For actual emails sent to users
+::UserNotifications.prepend_view_path(custom_views_path) if defined?(::UserNotifications)
+
+# For the email renderer (used by both)
+::Email::Renderer.prepend_view_path(custom_views_path) if defined?(::Email::Renderer)
 end
+
+
